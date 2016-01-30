@@ -95,9 +95,9 @@ function Tile:draw()
   love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
   useful.bindWhite()
 
-  if self:isFrontier() then
-    love.graphics.circle("line", self.x + TILE_W/2, self.y + TILE_H/2, 8)
-  end
+  -- if self:isFrontier() then
+  --   love.graphics.circle("line", self.x + TILE_W/2, self.y + TILE_H/2, 8)
+  -- end
 
 end
 
@@ -114,9 +114,11 @@ function Tile:mostInfluential()
       most_influence, most_influential = influence, player
     elseif influence == most_influence then
       most_influential = nil
+    elseif influence > second_most_influence then
+      second_most_influence = influence
     end
   end
-  return most_influential, most_influence - second_most_influence
+  return most_influential, most_influence - second_most_influence, most_influence
 end
 
 function Tile:hasNeighbourSuchThat(f)
@@ -134,9 +136,11 @@ function Tile:isFrontier()
   if self.owner then
     return false
   else
-    local mostInfluential = self:mostInfluential()
+    local mostInfluential, influenceLead, mostInfluence = self:mostInfluential()
     if not mostInfluential then
       return true
+    elseif mostInfluence >= 5 then
+      return false
     else
       return self:hasNeighbourSuchThat(function(otherTile)
 
@@ -189,19 +193,22 @@ end
 
 function state:mousepressed(x, y)
   local isValidMove = function(tile)
-    if tile.owner then
+    if not tile then
       return false
-    end
-    local currentPlayerInfluence = tile.influence[currentPlayer] or 0
-    for i, otherPlayer in ipairs(Player) do
-      if otherPlayer ~= currentPlayer then
-        local otherPlayerInfluence = tile.influence[otherPlayer] or 0
-        if currentPlayerInfluence < otherPlayerInfluence then
-          return false
+    elseif tile.owner then
+      return false
+    else
+      local currentPlayerInfluence = tile.influence[currentPlayer] or 0
+      for i, otherPlayer in ipairs(Player) do
+        if otherPlayer ~= currentPlayer then
+          local otherPlayerInfluence = tile.influence[otherPlayer] or 0
+          if currentPlayerInfluence < otherPlayerInfluence then
+            return false
+          end
         end
       end
+      return true
     end
-    return true
   end
 
   local isEndCondition = function()
