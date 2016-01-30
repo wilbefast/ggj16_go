@@ -3,12 +3,6 @@ local scaling = {
   pixel_perfect = true
 }
 
-TILE_W = 32
-TILE_H = 32
-WORLD_N_TILE_ACROSS = 12
-WORLD_N_TILE_DOWN = 12
-WORLD_W = WORLD_N_TILE_ACROSS*TILE_W  -- 384
-WORLD_H = WORLD_N_TILE_DOWN*TILE_H    -- 384
 VIEW_W = 0
 VIEW_H = 0
 WINDOW_SCALE = 0

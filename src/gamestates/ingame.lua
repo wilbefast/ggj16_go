@@ -94,6 +94,11 @@ function Tile:draw()
   useful.bindWhite(128)
   love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
   useful.bindWhite()
+
+  if self:isFrontier() then
+    love.graphics.circle("line", self.x + TILE_W/2, self.y + TILE_H/2, 8)
+  end
+
 end
 
 function Tile:mostInfluential()
@@ -114,6 +119,33 @@ function Tile:mostInfluential()
   return most_influential, most_influence - second_most_influence
 end
 
+function Tile:hasNeighbourSuchThat(f)
+  for i, otherTile in ipairs(self.neighbours8) do
+    if otherTile then
+      local val = f(otherTile)
+      if val then
+        return val
+      end
+    end
+  end
+end
+
+function Tile:isFrontier()
+  if self.owner then
+    return false
+  else
+    local mostInfluential = self:mostInfluential()
+    if not mostInfluential then
+      return true
+    else
+      return self:hasNeighbourSuchThat(function(otherTile)
+
+        return (not otherTile.owner) and otherTile:mostInfluential() ~= mostInfluential
+      end)
+    end
+  end
+end
+
 --[[------------------------------------------------------------
 INGAME GAMESTATE
 --]]------------------------------------------------------------
@@ -122,6 +154,7 @@ local state = gamestate.new()
 
 local grid
 local currentPlayer
+local isEnding
 
 --[[------------------------------------------------------------
 Substates
@@ -137,6 +170,7 @@ end
 function state:enter()
 	grid = CollisionGrid(Tile, TILE_W, TILE_H, WORLD_N_TILE_ACROSS, WORLD_N_TILE_DOWN)
   currentPlayer = Player[1]
+  isEnding = false
 end
 
 function state:leave()
@@ -170,12 +204,31 @@ function state:mousepressed(x, y)
     return true
   end
 
-  local setTileOwner = function(tile, owner)
+  local isEndCondition = function()
+    return not grid:map(function(tile)
+      return tile:isFrontier()
+    end)
+  end
+
+  local setTileOwner
+  setTileOwner = function(tile, owner)
     tile.owner = owner
     for i, neighbouringTile in ipairs(tile.neighbours8) do
       if neighbouringTile and not neighbouringTile.owner then
         neighbouringTile.influence[owner] = (neighbouringTile.influence[owner] or 0) + 1
       end
+    end
+
+    if not isEnding and isEndCondition() then
+      isEnding = true
+      grid:map(function(tile)
+        if not tile.owner then
+          local influential = tile:mostInfluential()
+          if influential then
+            setTileOwner(tile, influential)
+          end
+        end
+      end)
     end
   end
 

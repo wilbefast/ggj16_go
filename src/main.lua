@@ -24,6 +24,13 @@ local SCREENSHOT_KEY = "x"
 local CAPTURE_SCREENSHOT = false
 local NO_SHAKE_ON_SCREENSHOT = true
 
+TILE_W = 32
+TILE_H = 32
+WORLD_N_TILE_ACROSS = 5
+WORLD_N_TILE_DOWN = 5
+WORLD_W = WORLD_N_TILE_ACROSS*TILE_W  -- 384
+WORLD_H = WORLD_N_TILE_DOWN*TILE_H    -- 384
+
 --[[------------------------------------------------------------
 LOVE CALLBACKS
 --]]------------------------------------------------------------
