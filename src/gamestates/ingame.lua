@@ -13,38 +13,6 @@ Lesser General Public License for more details.
 --]]
 
 --[[------------------------------------------------------------
-TILE CLASS
---]]------------------------------------------------------------
-
-local Tile = Class
-{
-  types = {},
-
-  w = TILE_W,
-  h = TILE_H,
-
-  init = function(self)
-  end,
-}
-
---[[------------------------------------------------------------
-Game loop
---]]--
-
-function Tile:update(dt)
-end
-
-function Tile:draw()
-  if self.owner then
-    self.owner:bindColour()
-    love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
-    useful.bindWhite()
-  end
-  love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
-end
-
-
---[[------------------------------------------------------------
 PLAYER OBJECT
 --]]------------------------------------------------------------
 
@@ -76,6 +44,48 @@ Player({
 function Player:bindColour()
   love.graphics.setColor(self.red, self.green, self.blue)
 end
+
+
+--[[------------------------------------------------------------
+TILE CLASS
+--]]------------------------------------------------------------
+
+local Tile = Class
+{
+  types = {},
+
+  w = TILE_W,
+  h = TILE_H,
+
+  init = function(self)
+    self.influence = {}
+  end,
+}
+
+--[[------------------------------------------------------------
+Game loop
+--]]--
+
+function Tile:update(dt)
+end
+
+function Tile:draw()
+  if self.owner then
+    self.owner:bindColour()
+    love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+    useful.bindWhite()
+  else
+    for i, player in ipairs(Player) do
+      if self.influence[player] then
+        player:bindColour()
+        love.graphics.print(tostring(self.influence[player]), self.x, self.y + (i - 1)*16)
+      end
+    end
+    useful.bindWhite()
+  end
+  love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+end
+
 
 --[[------------------------------------------------------------
 INGAME GAMESTATE
@@ -117,10 +127,35 @@ function state:keypressed(key, uni)
 end
 
 function state:mousepressed(x, y)
+  local isValidMove = function(tile)
+    if tile.owner then
+      return false
+    end
+    local currentPlayerInfluence = tile.influence[currentPlayer] or 0
+    for i, otherPlayer in ipairs(Player) do
+      if otherPlayer ~= currentPlayer then
+        local otherPlayerInfluence = tile.influence[otherPlayer] or 0
+        if currentPlayerInfluence < otherPlayerInfluence then
+          return false
+        end
+      end
+    end
+    return true
+  end
+
+  local setTileOwner = function(tile, owner)
+    tile.owner = owner
+    for i, neighbouringTile in ipairs(tile.neighbours8) do
+      if neighbouringTile and not neighbouringTile.owner then
+        neighbouringTile.influence[owner] = (neighbouringTile.influence[owner] or 0) + 1
+      end
+    end
+  end
+
   local t = grid:pixelToTile(x, y)
-  if t then
+  if isValidMove(t) then
     -- set owner
-    t.owner = currentPlayer
+    setTileOwner(t, currentPlayer)
 
     -- next change
     local nextPlayerIndex = currentPlayer.index + 1
