@@ -33,10 +33,9 @@ local _reset = function()
 
   local step = (scaling.pixel_perfect and 1) or 0.01
   WINDOW_SCALE = step
-  VIEW_YSCALE = 0.75
-	if WORLD_W <= WINDOW_W or WORLD_H*VIEW_YSCALE <= WINDOW_H then
+	if WORLD_W <= WINDOW_W or WORLD_H <= WINDOW_H then
 	  while (WORLD_W*(WINDOW_SCALE + step) < WINDOW_W) 
-	  and (WORLD_H*VIEW_YSCALE*(WINDOW_SCALE + step) < WINDOW_H)
+	  and (WORLD_H*(WINDOW_SCALE + step) < WINDOW_H)
 	  do
 	    WINDOW_SCALE = WINDOW_SCALE + step
 	  end
@@ -44,15 +43,19 @@ local _reset = function()
 	  repeat
 	  	WINDOW_SCALE = WINDOW_SCALE - 0.1*step
 	  until ((WORLD_W*WINDOW_SCALE <= WINDOW_W)
-	  and (WORLD_H*VIEW_YSCALE*WINDOW_SCALE <= WINDOW_H))
+	  and (WORLD_H*WINDOW_SCALE <= WINDOW_H))
 	end
   VIEW_W = WORLD_W*WINDOW_SCALE
-  VIEW_H = WORLD_H*VIEW_YSCALE*WINDOW_SCALE
+  VIEW_H = WORLD_H*WINDOW_SCALE
 
 	log:write("Scaling factor = " .. tostring(WINDOW_SCALE))
   log:write("View size = " .. tostring(VIEW_W) ..  "*" .. tostring(VIEW_H))
 end
 
 scaling.reset = _reset
+
+scaling.scaleMouse = function(x, y)
+	
+end
 
 return scaling

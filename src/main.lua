@@ -17,6 +17,7 @@ GLOBALS
 --]]------------------------------------------------------------
 
 local MUTE = true
+local DEBUG = false
 local MAX_DT = 1/30
 local SAFE_MODE = false
 local SCREENSHOT_KEY = "x"
@@ -41,6 +42,7 @@ function love.load(arg)
   log = require("unrequited/log")
   log:setLength(21)
   Controller = require("unrequited/Controller")
+  CollisionGrid = require("unrequited/CollisionGrid")
 
   -- game-specific code
   scaling = require("scaling")
@@ -65,7 +67,7 @@ function love.load(arg)
   math.randomseed(os.time())
 
   -- no mouse
-  --love.mouse.setVisible(false)
+  love.mouse.setVisible(false)
 
   -- save directory
   love.filesystem.setIdentity("gg16_go")
@@ -92,6 +94,10 @@ function love.quit()
 end
 
 function love.keypressed(key, uni)
+  if key=="o" then
+    DEBUG = not DEBUG
+  end
+
   gamestate.keypressed(key, uni)
   Controller.keypressed(key, uni)
 end
@@ -102,11 +108,15 @@ function love.keyreleased(key, uni)
 end
 
 function love.mousepressed(x, y, button)
+  x = (x - (WINDOW_W - VIEW_W)*0.5)/WINDOW_SCALE
+  y = (y - (WINDOW_H - VIEW_H)*0.5)/WINDOW_SCALE
   gamestate.mousepressed(x, y, button)
   Controller.mousepressed(x, y, button)
 end
 
 function love.mousereleased(x, y, button)
+  x = (x - (WINDOW_W - VIEW_W)*0.5)/WINDOW_SCALE
+  y = (y - (WINDOW_H - VIEW_H)*0.5)/WINDOW_SCALE
   gamestate.mousereleased(x, y, button)
   Controller.mousereleased(x, y, button)
 end
@@ -186,6 +196,11 @@ local __unsafeDraw = function()
   -- capture GIF footage
   if CAPTURE_SCREENSHOT then
     useful.recordGIF()
+  end
+
+  -- draw logs
+  if DEBUG then
+    log:draw(16, 48)
   end
 end
 

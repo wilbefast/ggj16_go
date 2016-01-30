@@ -54,9 +54,6 @@ end
 function state:gamepadpressed(joystick, button)
 end
 
-function state:onPlayerAssigned(player, controller)
-end
-
 function state:update(dt)
 end
 
