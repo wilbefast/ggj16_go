@@ -25,6 +25,10 @@ Player = Class
     self.red, self.green, self.blue = args.r, args.g, args.b
     table.insert(Player, self)
     self.index = #Player
+    self.combos = {}
+    for comboSize = 1, math.min(WORLD_N_TILE_ACROSS, WORLD_N_TILE_DOWN) do
+      self.combos[comboSize] = {}
+    end
   end
 }
 Player({
@@ -219,13 +223,40 @@ function state:mousepressed(x, y)
 
   local setTileOwner
   setTileOwner = function(tile, owner)
+
+    -- set the owner
     tile.owner = owner
+
+    -- propagate influence
     for i, neighbouringTile in ipairs(tile.neighbours8) do
       if neighbouringTile and not neighbouringTile.owner then
         neighbouringTile.influence[owner] = (neighbouringTile.influence[owner] or 0) + 1
       end
     end
 
+    -- check for combos
+    grid:map(function(comboStartTile)
+      for comboSize, comboList in ipairs(owner.combos) do
+        if not comboList[comboStartTile] then
+          local isCombo = not grid:mapRectangle(comboStartTile.col, comboStartTile.row, comboSize + 1, comboSize + 1, 
+          function(comboTile) 
+            if not comboTile then
+              return true
+            elseif comboTile.owner ~= owner then
+              return true
+            else
+              return false
+            end
+          end)
+          if isCombo then
+            comboList[comboStartTile] = true
+            log:write(owner.name, "got a combo of size", comboSize + 1)
+          end
+        end
+      end
+    end)
+
+    -- check for stalemate: fill out remaining tiles if so
     if not isEnding and isEndCondition() then
       isEnding = true
       grid:map(function(tile)

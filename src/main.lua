@@ -103,6 +103,8 @@ end
 function love.keypressed(key, uni)
   if key=="o" then
     DEBUG = not DEBUG
+  elseif key=="x" then
+    CAPTURE_SCREENSHOT = (not CAPTURE_SCREENSHOT)
   end
 
   gamestate.keypressed(key, uni)
