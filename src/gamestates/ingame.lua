@@ -41,8 +41,8 @@ Player({
   b = 255
 })
 
-function Player:bindColour()
-  love.graphics.setColor(self.red, self.green, self.blue)
+function Player:bindColour(a)
+  love.graphics.setColor(self.red, self.green, self.blue, a or 255)
 end
 
 
@@ -78,14 +78,34 @@ function Tile:draw()
     for i, player in ipairs(Player) do
       if self.influence[player] then
         player:bindColour()
-        love.graphics.print(tostring(self.influence[player]), self.x, self.y + (i - 1)*16)
+        --love.graphics.print(tostring(self.influence[player]), self.x, self.y + (i - 1)*16)
       end
+    end
+    local mostInfluential = self:mostInfluential()
+    if mostInfluential then
+      mostInfluential:bindColour(128)
+      love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
     end
     useful.bindWhite()
   end
   love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
 end
 
+function Tile:mostInfluential()
+  if self.owner then
+    return self.owner
+  end
+  local most_influence, most_influential = -math.huge, nil
+  for i, player in ipairs(Player) do
+    local influence = self.influence[player] or 0
+    if influence > most_influence then
+      most_influence, most_influential = influence, player
+    elseif influence == most_influence then
+      most_influential = nil
+    end
+  end
+  return most_influential
+end
 
 --[[------------------------------------------------------------
 INGAME GAMESTATE
