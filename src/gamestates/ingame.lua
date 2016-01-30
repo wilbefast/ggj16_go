@@ -81,30 +81,37 @@ function Tile:draw()
         --love.graphics.print(tostring(self.influence[player]), self.x, self.y + (i - 1)*16)
       end
     end
-    local mostInfluential = self:mostInfluential()
+    local mostInfluential, influenceLead = self:mostInfluential()
     if mostInfluential then
       mostInfluential:bindColour(128)
       love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+      mostInfluential:bindColour()
+      love.graphics.printf(
+        tostring(influenceLead), self.x + TILE_W*0.4, self.y + TILE_H*0.3, TILE_W*0.3)
     end
     useful.bindWhite()
   end
+  useful.bindWhite(128)
   love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+  useful.bindWhite()
 end
 
 function Tile:mostInfluential()
   if self.owner then
     return self.owner
   end
-  local most_influence, most_influential = -math.huge, nil
+  local second_most_influence = 0
+  local most_influence, most_influential = 0, nil
   for i, player in ipairs(Player) do
     local influence = self.influence[player] or 0
     if influence > most_influence then
+      second_most_influence = most_influence
       most_influence, most_influential = influence, player
     elseif influence == most_influence then
       most_influential = nil
     end
   end
-  return most_influential
+  return most_influential, most_influence - second_most_influence
 end
 
 --[[------------------------------------------------------------
