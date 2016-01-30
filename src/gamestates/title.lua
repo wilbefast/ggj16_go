@@ -32,7 +32,6 @@ end
 function state:enter()
 end
 
-
 function state:leave()
 end
 
@@ -58,7 +57,8 @@ function state:update(dt)
 end
 
 function state:draw()
-	love.graphics.print("HELLO TITLE", 32, 32)
+	love.graphics.setFont(fontHuge)
+	love.graphics.printf("Toil and trouble", WORLD_W*0.25, WORLD_H*0.3, WORLD_W*0.5, "center")
 end
 
 

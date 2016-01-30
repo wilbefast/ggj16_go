@@ -16,6 +16,13 @@ Lesser General Public License for more details.
 PLAYER OBJECT
 --]]------------------------------------------------------------
 
+-- 255, 127, 51 ORANGE
+-- 18, 25, 25 BLACK
+-- 127, 0, 38 BURGANDY
+-- 255, 204, 127 BONE
+-- 67, 45, 54 RED GREY
+
+
 local Player
 
 Player = Class
@@ -26,22 +33,19 @@ Player = Class
     table.insert(Player, self)
     self.index = #Player
     self.combos = {}
-    for comboSize = 1, math.min(WORLD_N_TILE_ACROSS, WORLD_N_TILE_DOWN) do
-      self.combos[comboSize] = {}
-    end
   end
 }
 Player({
-  name = "red",
-  r = 255,
-  g = 0,
+  name = "pumpkin",
+  r = 94,
+  g = 204,
   b = 0
 })
 
 Player({
-  name = "blue",
-  r = 0,
-  g = 0,
+  name = "vampire",
+  r = 166,
+  g = 51,
   b = 255
 })
 
@@ -73,10 +77,25 @@ Game loop
 function Tile:update(dt)
 end
 
+function Tile:draw_outline()
+  -- white outline
+  useful.bindWhite(128)
+  love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+  useful.bindWhite()
+end
+
+function Tile:draw_outline()
+  -- white outline
+  useful.bindWhite(128)
+  love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+  useful.bindWhite()
+end
+
 function Tile:draw()
+  -- colour based on the owner
   if self.owner then
     self.owner:bindColour()
-    love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+    love.graphics.rectangle("fill", self.x - 1, self.y - 1, self.w + 1, self.h + 1)
     useful.bindWhite()
   else
     for i, player in ipairs(Player) do
@@ -88,16 +107,14 @@ function Tile:draw()
     local mostInfluential, influenceLead = self:mostInfluential()
     if mostInfluential then
       mostInfluential:bindColour(128)
-      love.graphics.rectangle("fill", self.x, self.y, self.w, self.h)
+      love.graphics.rectangle("fill", self.x - 1, self.y - 1, self.w + 1, self.h + 1)
       mostInfluential:bindColour()
+      love.graphics.setFont(fontSmall)
       love.graphics.printf(
-        tostring(influenceLead), self.x + TILE_W*0.4, self.y + TILE_H*0.3, TILE_W*0.3)
+        tostring(numerals[influenceLead]), self.x, self.y + TILE_H*0.3, TILE_W, "center")
     end
     useful.bindWhite()
   end
-  useful.bindWhite(128)
-  love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
-  useful.bindWhite()
 
   -- if self:isFrontier() then
   --   love.graphics.circle("line", self.x + TILE_W/2, self.y + TILE_H/2, 8)
@@ -177,8 +194,22 @@ end
 
 function state:enter()
 	grid = CollisionGrid(Tile, TILE_W, TILE_H, WORLD_N_TILE_ACROSS, WORLD_N_TILE_DOWN)
+  grid.draw = function(self)
+    self:map(function(tile)
+      tile:draw_outline()
+    end)
+    CollisionGrid.draw(self)
+  end
   currentPlayer = Player[1]
   isEnding = false
+
+  -- reset players
+  for i, player in ipairs(Player) do
+    player.score = 0
+    for comboSize = 1, math.min(WORLD_N_TILE_ACROSS, WORLD_N_TILE_DOWN) do
+      player.combos[comboSize] = {}
+    end
+  end
 end
 
 function state:leave()
@@ -227,6 +258,9 @@ function state:mousepressed(x, y)
     -- set the owner
     tile.owner = owner
 
+    -- give the owner 1 point
+    owner.score = owner.score + 1
+
     -- propagate influence
     for i, neighbouringTile in ipairs(tile.neighbours8) do
       if neighbouringTile and not neighbouringTile.owner then
@@ -237,8 +271,9 @@ function state:mousepressed(x, y)
     -- check for combos
     grid:map(function(comboStartTile)
       for comboSize, comboList in ipairs(owner.combos) do
+        local comboSize = comboSize + 1
         if not comboList[comboStartTile] then
-          local isCombo = not grid:mapRectangle(comboStartTile.col, comboStartTile.row, comboSize + 1, comboSize + 1, 
+          local isCombo = not grid:mapRectangle(comboStartTile.col, comboStartTile.row, comboSize, comboSize, 
           function(comboTile) 
             if not comboTile then
               return true
@@ -250,7 +285,7 @@ function state:mousepressed(x, y)
           end)
           if isCombo then
             comboList[comboStartTile] = true
-            log:write(owner.name, "got a combo of size", comboSize + 1)
+            owner.score = owner.score + comboSize*comboSize
           end
         end
       end
@@ -291,8 +326,33 @@ function state:update(dt)
 end
 
 function state:draw()
+
 	-- grid
   grid:draw()
+
+  -- UI
+  love.graphics.setFont(fontLarge)
+  for i, player in ipairs(Player) do
+    player:bindColour()
+
+      if player.index - 1 % 2 == 0 then
+        -- align left
+        love.graphics.printf(tostring(player.score), 
+          TILE_W, WORLD_H - 1.8*TILE_H, WORLD_W*0.4, "left")
+      else
+        -- align right
+        love.graphics.printf(tostring(player.score), 
+          WORLD_W*0.6 - TILE_W, WORLD_H - 1.8*TILE_H, WORLD_W*0.4, "right")
+      end
+
+    useful.bindWhite()
+  end
+
+  -- outlines
+  love.graphics.setLineWidth(2)
+  love.graphics.setColor(255, 204, 127)
+  love.graphics.rectangle("line", 0, WORLD_H - 2*TILE_H, WORLD_W, 2*TILE_H)
+  love.graphics.setLineWidth(1)
 
   -- cursor
   local x, y = love.mouse.getPosition( )

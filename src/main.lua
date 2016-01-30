@@ -28,8 +28,19 @@ TILE_W = 32
 TILE_H = 32
 WORLD_N_TILE_ACROSS = 12
 WORLD_N_TILE_DOWN = 12
-WORLD_W = WORLD_N_TILE_ACROSS*TILE_W  -- 384
-WORLD_H = WORLD_N_TILE_DOWN*TILE_H    -- 384
+WORLD_W = WORLD_N_TILE_ACROSS*TILE_W        -- 384
+WORLD_H = (WORLD_N_TILE_DOWN + 2)*TILE_H    -- 448
+
+numerals = {
+  "I",
+  "II",
+  "III",
+  "IV",
+  "V",
+  "V+",
+  "V+",
+  "V+"
+}
 
 --[[------------------------------------------------------------
 LOVE CALLBACKS
@@ -50,6 +61,14 @@ function love.load(arg)
   log:setLength(21)
   Controller = require("unrequited/Controller")
   CollisionGrid = require("unrequited/CollisionGrid")
+
+  -- resources
+  fontTiny = love.graphics.newFont("assets/ttf/Romulus_by_pix3m.ttf", 16)
+  fontSmall = love.graphics.newFont("assets/ttf/Romulus_by_pix3m.ttf", 24)
+  fontMedium = love.graphics.newFont("assets/ttf/Romulus_by_pix3m.ttf", 32)
+  fontLarge = love.graphics.newFont("assets/ttf/Romulus_by_pix3m.ttf", 48)
+  fontHuge = love.graphics.newFont("assets/ttf/Romulus_by_pix3m.ttf", 64)
+  love.graphics.setFont(fontMedium)
 
   -- game-specific code
   scaling = require("scaling")
@@ -196,6 +215,16 @@ local __unsafeDraw = function()
 	    end
 
 	  love.graphics.pop() -- pop screenshake
+
+    -- background
+    love.graphics.setColor(18, 25, 25)
+    love.graphics.rectangle("fill", 0, 0, WORLD_W, WORLD_H)
+
+    -- outline
+    love.graphics.setColor(255, 204, 127)
+    love.graphics.setLineWidth(2)
+    love.graphics.rectangle("line", 0, 0, WORLD_W, WORLD_H)
+    love.graphics.setLineWidth(1)
 
     -- draw any other state specific stuff
     gamestate.draw(0, 0)
