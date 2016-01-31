@@ -16,12 +16,6 @@ Lesser General Public License for more details.
 PLAYER OBJECT
 --]]------------------------------------------------------------
 
--- 255, 127, 51 ORANGE
--- 18, 25, 25 BLACK
--- 127, 0, 38 BURGANDY
--- 255, 204, 127 BONE
--- 67, 45, 54 RED GREY
-
 
 local Player
 
@@ -78,16 +72,9 @@ function Tile:update(dt)
 end
 
 function Tile:draw_outline()
-  -- white outline
-  useful.bindWhite(128)
-  love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
-  useful.bindWhite()
-end
-
-function Tile:draw_outline()
-  -- white outline
-  useful.bindWhite(128)
-  love.graphics.rectangle("line", self.x, self.y, self.w, self.h)
+  -- bone-coloured outline
+  love.graphics.setColor(255, 204, 127)
+  love.graphics.draw(tile_outline, self.x, self.y)
   useful.bindWhite()
 end
 
@@ -95,7 +82,7 @@ function Tile:draw()
   -- colour based on the owner
   if self.owner then
     self.owner:bindColour()
-    love.graphics.rectangle("fill", self.x - 1, self.y - 1, self.w + 1, self.h + 1)
+    love.graphics.draw(pentagram, self.x, self.y)
     useful.bindWhite()
   else
     for i, player in ipairs(Player) do
@@ -111,7 +98,7 @@ function Tile:draw()
       mostInfluential:bindColour()
       love.graphics.setFont(fontSmall)
       love.graphics.printf(
-        tostring(numerals[influenceLead]), self.x, self.y + TILE_H*0.1, TILE_W, "center")
+        tostring(numerals[influenceLead]), self.x, self.y + TILE_H*0.3, TILE_W, "center")
     end
     useful.bindWhite()
   end
@@ -338,11 +325,11 @@ function state:draw()
       if player.index - 1 % 2 == 0 then
         -- align left
         love.graphics.printf(tostring(player.score), 
-          TILE_W, WORLD_H - 1.8*TILE_H, WORLD_W*0.4, "left")
+          TILE_W, WORLD_H - 1.4*TILE_H, WORLD_W*0.4, "left")
       else
         -- align right
         love.graphics.printf(tostring(player.score), 
-          WORLD_W*0.6 - TILE_W, WORLD_H - 1.8*TILE_H, WORLD_W*0.4, "right")
+          WORLD_W*0.6 - TILE_W, WORLD_H - 1.4*TILE_H, WORLD_W*0.4, "right")
       end
 
     useful.bindWhite()
@@ -359,7 +346,7 @@ function state:draw()
   x = (x - (WINDOW_W - VIEW_W)*0.5)/WINDOW_SCALE
   y = (y - (WINDOW_H - VIEW_H)*0.5)/WINDOW_SCALE
   currentPlayer:bindColour()
-  love.graphics.circle("fill", x, y, 6)
+  love.graphics.draw(cursor, x, y)
   useful.bindWhite()
 
 end

@@ -6,7 +6,9 @@ function love.conf(t)
 
   t.window.title = "Ryte"         -- The window title (string)
   t.window.icon = nil                -- Filepath to an image to use as the window's icon (string)
-  t.window.borderless = true        -- Remove all border visuals from the window (boolean)
+  t.window.width = 400
+  t.window.height = 500
+  t.window.borderless = false        -- Remove all border visuals from the window (boolean)
   t.window.resizable = false         -- Let the window be user-resizable (boolean)
   t.window.fullscreen = false        -- Enable fullscreen (boolean)
   t.window.fullscreentype = "exclusive" -- Standard fullscreen or desktop fullscreen mode (string)

@@ -63,12 +63,15 @@ function love.load(arg)
   CollisionGrid = require("unrequited/CollisionGrid")
 
   -- resources
-  fontTiny = love.graphics.newFont("assets/ttf/Romulus_by_pix3m.ttf", 16)
-  fontSmall = love.graphics.newFont("assets/ttf/Romulus_by_pix3m.ttf", 24)
-  fontMedium = love.graphics.newFont("assets/ttf/Romulus_by_pix3m.ttf", 32)
-  fontLarge = love.graphics.newFont("assets/ttf/Romulus_by_pix3m.ttf", 48)
-  fontHuge = love.graphics.newFont("assets/ttf/Romulus_by_pix3m.ttf", 64)
+  -- ... fonts
+  fontSmall = love.graphics.newFont("assets/ttf/alagard.ttf", 16)
+  fontMedium = love.graphics.newFont("assets/ttf/alagard.ttf", 24)
+  fontLarge = love.graphics.newFont("assets/ttf/alagard.ttf", 32)
   love.graphics.setFont(fontMedium)
+  -- ...images
+  pentagram = love.graphics.newImage("assets/png/pentagram.png")
+  tile_outline = love.graphics.newImage("assets/png/tile.png")
+  cursor = love.graphics.newImage("assets/png/cursor.png")
 
   -- game-specific code
   scaling = require("scaling")
@@ -80,7 +83,7 @@ function love.load(arg)
 
 	-- startup logs
 	log.print = true
-	log:write("Starting 'GGJ16_Go'!")
+	log:write("Starting 'Ryte'!")
 
 	-- set scaling based on resolution
 	scaling.reset()
@@ -102,7 +105,7 @@ function love.load(arg)
   love.window.setTitle("Ryte")
   
   -- window icon
-  love.window.setIcon(love.image.newImageData("assets/icon.png"))
+  love.window.setIcon(love.image.newImageData("assets/png/icon.png"))
 
   -- clear colour
   love.graphics.setBackgroundColor(0, 0, 0)
