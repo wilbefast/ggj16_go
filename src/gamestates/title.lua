@@ -58,8 +58,10 @@ end
 
 function state:draw()
 
-	-- logo
 
+	-- logo
+	useful.bindWhite()
+	love.graphics.draw(logo, WORLD_W*0.5, WORLD_H*0.475, 0, 1, 1, 64, 64)	
 	
 	love.graphics.setColor(255, 204, 127)
 

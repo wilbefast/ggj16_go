@@ -72,6 +72,9 @@ function love.load(arg)
   pentagram = love.graphics.newImage("assets/png/pentagram.png")
   tile_outline = love.graphics.newImage("assets/png/tile.png")
   cursor = love.graphics.newImage("assets/png/cursor.png")
+  logo = love.graphics.newImage("assets/png/logo.png")
+  -- ... music
+  audio:load_music("music")
 
   -- game-specific code
   scaling = require("scaling")
@@ -109,6 +112,9 @@ function love.load(arg)
 
   -- clear colour
   love.graphics.setBackgroundColor(0, 0, 0)
+
+  -- play music
+  audio:play_music("music", 0.3)
 
   -- go to the initial gamestate
   gamestate.switch(title)

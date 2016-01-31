@@ -33,8 +33,8 @@ To play on Mac or Linux please install [Love 2D](http://love2d.org/).
 The game is best played with XBox Controllers.
 
 ## Credits
-
-* [William 'Wilbefast' Dyce](https://twitter.com/wilbefast)
+* Design, Programming and Art [William 'Wilbefast' Dyce](https://twitter.com/wilbefast)
+* **"Lonely Witch"** music from [OpenGameArt.org](http://opengameart.org/content/loop-lonely-witch) 
 
 ## Changelog
 
