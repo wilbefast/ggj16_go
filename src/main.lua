@@ -105,6 +105,9 @@ function love.load(arg)
 
   -- no mouse
   love.mouse.setVisible(false)
+  if love.system.getOS() == "Android" then
+    HIDE_CURSOR = true
+  end
 
   -- save directory
   love.filesystem.setIdentity("gg16_go")

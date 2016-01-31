@@ -365,14 +365,17 @@ function state:draw()
   love.graphics.setLineWidth(1)
 
   -- cursor
-  local x, y = love.mouse.getPosition( )
-  x = (x - (WINDOW_W - VIEW_W)*0.5)/WINDOW_SCALE
-  y = (y - (WINDOW_H - VIEW_H)*0.5)/WINDOW_SCALE
-  if isEnding then
-  else
-    currentPlayer:bindColour()
+  if not HIDE_CURSOR then
+    local x, y = love.mouse.getPosition( )
+    x = (x - (WINDOW_W - VIEW_W)*0.5)/WINDOW_SCALE
+    y = (y - (WINDOW_H - VIEW_H)*0.5)/WINDOW_SCALE
+    if isEnding then
+    else
+      currentPlayer:bindColour()
+    end
+    love.graphics.draw(cursor, x, y)
   end
-  love.graphics.draw(cursor, x, y)
+
   useful.bindWhite()
 
 end
