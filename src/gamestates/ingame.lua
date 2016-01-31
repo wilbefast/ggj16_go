@@ -286,7 +286,7 @@ function state:mousepressed(x, y)
           if isCombo then
             audio:play_sound("combo")
             comboList[comboStartTile] = true
-            owner.score = owner.score + comboSize*comboSize*comboSize
+            owner.score = owner.score + comboSize*comboSize
           end
         end
       end

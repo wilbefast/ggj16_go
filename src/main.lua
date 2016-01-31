@@ -84,6 +84,7 @@ function love.load(arg)
   -- game-specific code
   scaling = require("scaling")
   title = require("gamestates/title")
+  tutorial = require("gamestates/tutorial")
   ingame = require("gamestates/ingame")
 
 	-- set timestamp

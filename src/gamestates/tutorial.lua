@@ -13,13 +13,14 @@ Lesser General Public License for more details.
 --]]
 
 --[[------------------------------------------------------------
-TITLE GAMESTATE
+TUTORIAL GAMESTATE
 --]]------------------------------------------------------------
 
 local state = gamestate.new()
 
 local anim_t
 local anim_r
+local anim_y
 
 --[[------------------------------------------------------------
 Gamestate navigation
@@ -44,13 +45,13 @@ Callbacks
 
 function state:keypressed(key, uni)
   if key == "escape" then
-  	return love.event.push("quit")
+  	gamestate.switch(title)
   end
 end
 
 function state:mousepressed()
 	audio:play_sound("game_start")
-	gamestate.switch(tutorial)
+	gamestate.switch(ingame)
 end
 
 function state:gamepadpressed(joystick, button)
@@ -66,29 +67,30 @@ end
 
 function state:draw()
 
-	-- logo
-	useful.bindWhite()
-	love.graphics.draw(logo, WORLD_W*0.5, WORLD_H*0.475, anim_r, 1, 1, 64, 64)	
-	
-	love.graphics.setColor(255, 204, 127)
-
-	-- text
-	love.graphics.setFont(fontLarge)
-	love.graphics.printf("RYTE", WORLD_W*0.1, WORLD_H*0.1, WORLD_W*0.8, "center")
 	love.graphics.setFont(fontMedium)
-	love.graphics.printf("@wilbefast", WORLD_W*0.1, WORLD_H*0.75, WORLD_W*0.8, "center")
-	love.graphics.printf("#GGJ16", WORLD_W*0.1, WORLD_H*0.85, WORLD_W*0.8, "center")
 
-  -- cursor
-  if not HIDE_CURSOR then
-	  local x, y = love.mouse.getPosition( )
-	  x = (x - (WINDOW_W - VIEW_W)*0.5)/WINDOW_SCALE
-	  y = (y - (WINDOW_H - VIEW_H)*0.5)/WINDOW_SCALE
-	  love.graphics.draw(cursor, x, y)
-	end
+	-- 1x1 = 1 point
+	love.graphics.draw(pentagram, WORLD_W*0.25, WORLD_H*0.1)
+	love.graphics.printf("+1", WORLD_W*0.7, WORLD_H*0.1, WORLD_W*0.4, "left")
 
-  useful.bindWhite()
+	-- 2x2 = 4 points
+	love.graphics.draw(pentagram, WORLD_W*0.2, WORLD_H*0.3)
+	love.graphics.draw(pentagram, WORLD_W*0.2 + 32, WORLD_H*0.3)
+	love.graphics.draw(pentagram, WORLD_W*0.2, WORLD_H*0.3 + 32)
+	love.graphics.draw(pentagram, WORLD_W*0.2 + 32, WORLD_H*0.3 + 32)
+	love.graphics.printf("+4", WORLD_W*0.7, WORLD_H*0.35, WORLD_W*0.4, "left")
 
+	-- 3x3 = 16 points
+	love.graphics.draw(pentagram, WORLD_W*0.15, WORLD_H*0.6)
+	love.graphics.draw(pentagram, WORLD_W*0.15 + 32, WORLD_H*0.6)
+	love.graphics.draw(pentagram, WORLD_W*0.15 + 64, WORLD_H*0.6)
+	love.graphics.draw(pentagram, WORLD_W*0.15, WORLD_H*0.6 + 32)
+	love.graphics.draw(pentagram, WORLD_W*0.15 + 32, WORLD_H*0.6 + 32)
+	love.graphics.draw(pentagram, WORLD_W*0.15 + 64, WORLD_H*0.6 + 32)
+	love.graphics.draw(pentagram, WORLD_W*0.15, WORLD_H*0.6 + 64)
+	love.graphics.draw(pentagram, WORLD_W*0.15 + 32, WORLD_H*0.6 + 64)
+	love.graphics.draw(pentagram, WORLD_W*0.15 + 64, WORLD_H*0.6 + 64)
+	love.graphics.printf("+16", WORLD_W*0.7, WORLD_H*0.7, WORLD_W*0.4, "left")
 end
 
 
