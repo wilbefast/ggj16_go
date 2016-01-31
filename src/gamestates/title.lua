@@ -30,6 +30,7 @@ function state:init()
 end
 
 function state:enter()
+	audio:set_music_volume(1)
 end
 
 function state:leave()
@@ -47,6 +48,7 @@ function state:keypressed(key, uni)
 end
 
 function state:mousepressed()
+	audio:play_sound("game_start")
 	gamestate.switch(ingame)
 end
 
@@ -57,7 +59,6 @@ function state:update(dt)
 end
 
 function state:draw()
-
 
 	-- logo
 	useful.bindWhite()

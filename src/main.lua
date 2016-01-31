@@ -75,6 +75,11 @@ function love.load(arg)
   logo = love.graphics.newImage("assets/png/logo.png")
   -- ... music
   audio:load_music("music")
+  audio:load_sound("combo", 1, 3)
+  audio:load_sound("play", 0.7, 7)
+  audio:load_sound("fail", 1, 3)
+  audio:load_sound("game_start", 1, 2)
+  audio:load_sound("game_end", 1, 2)
 
   -- game-specific code
   scaling = require("scaling")

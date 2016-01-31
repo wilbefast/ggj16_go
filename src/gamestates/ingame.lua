@@ -180,6 +180,9 @@ function state:init()
 end
 
 function state:enter()
+  audio:set_music_volume(0.3)
+
+
 	grid = CollisionGrid(Tile, TILE_W, TILE_H, WORLD_N_TILE_ACROSS, WORLD_N_TILE_DOWN)
   grid.draw = function(self)
     self:map(function(tile)
@@ -214,6 +217,11 @@ function state:keypressed(key, uni)
 end
 
 function state:mousepressed(x, y)
+  if isEnding then
+    gamestate.switch(title)
+    return
+  end
+
   local isValidMove = function(tile)
     if not tile then
       return false
@@ -271,6 +279,7 @@ function state:mousepressed(x, y)
             end
           end)
           if isCombo then
+            audio:play_sound("combo")
             comboList[comboStartTile] = true
             owner.score = owner.score + comboSize*comboSize*comboSize
           end
@@ -281,6 +290,7 @@ function state:mousepressed(x, y)
     -- check for stalemate: fill out remaining tiles if so
     if not isEnding and isEndCondition() then
       isEnding = true
+      audio:play_sound("game_end")
       grid:map(function(tile)
         if not tile.owner then
           local influential = tile:mostInfluential()
@@ -294,6 +304,8 @@ function state:mousepressed(x, y)
 
   local t = grid:pixelToTile(x, y)
   if isValidMove(t) then
+    audio:play_sound("play", 0.2)
+
     -- set owner
     setTileOwner(t, currentPlayer)
 
@@ -303,6 +315,8 @@ function state:mousepressed(x, y)
       nextPlayerIndex = 1
     end
     currentPlayer = Player[nextPlayerIndex]
+  else
+    audio:play_sound("fail")
   end
 end
 
@@ -345,7 +359,10 @@ function state:draw()
   local x, y = love.mouse.getPosition( )
   x = (x - (WINDOW_W - VIEW_W)*0.5)/WINDOW_SCALE
   y = (y - (WINDOW_H - VIEW_H)*0.5)/WINDOW_SCALE
-  currentPlayer:bindColour()
+  if isEnding then
+  else
+    currentPlayer:bindColour()
+  end
   love.graphics.draw(cursor, x, y)
   useful.bindWhite()
 
