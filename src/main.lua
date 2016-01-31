@@ -26,8 +26,8 @@ local NO_SHAKE_ON_SCREENSHOT = true
 
 TILE_W = 32
 TILE_H = 32
-WORLD_N_TILE_ACROSS = 12
-WORLD_N_TILE_DOWN = 12
+WORLD_N_TILE_ACROSS = 8
+WORLD_N_TILE_DOWN = 8
 WORLD_W = WORLD_N_TILE_ACROSS*TILE_W        -- 384
 WORLD_H = (WORLD_N_TILE_DOWN + 2)*TILE_H    -- 448
 
@@ -99,7 +99,7 @@ function love.load(arg)
   love.filesystem.setIdentity("gg16_go")
 
   -- window title
-  love.window.setTitle("GGJ16_Go")
+  love.window.setTitle("Ryte")
   
   -- window icon
   love.window.setIcon(love.image.newImageData("assets/icon.png"))

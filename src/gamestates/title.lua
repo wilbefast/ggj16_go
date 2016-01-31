@@ -58,7 +58,10 @@ end
 
 function state:draw()
 	love.graphics.setFont(fontHuge)
-	love.graphics.printf("Toil and trouble", WORLD_W*0.25, WORLD_H*0.3, WORLD_W*0.5, "center")
+	love.graphics.printf("RYTE", WORLD_W*0.1, WORLD_H*0.2, WORLD_W*0.8, "center")
+	love.graphics.setFont(fontMedium)
+	love.graphics.printf("@wilbefast", WORLD_W*0.1, WORLD_H*0.5, WORLD_W*0.8, "center")
+	love.graphics.printf("#GGJ16", WORLD_W*0.1, WORLD_H*0.6, WORLD_W*0.8, "center")
 end
 
 

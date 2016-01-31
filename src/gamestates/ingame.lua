@@ -106,12 +106,12 @@ function Tile:draw()
     end
     local mostInfluential, influenceLead = self:mostInfluential()
     if mostInfluential then
-      mostInfluential:bindColour(128)
-      love.graphics.rectangle("fill", self.x - 1, self.y - 1, self.w + 1, self.h + 1)
+      -- mostInfluential:bindColour(128)
+      -- love.graphics.rectangle("fill", self.x - 1, self.y - 1, self.w + 1, self.h + 1)
       mostInfluential:bindColour()
       love.graphics.setFont(fontSmall)
       love.graphics.printf(
-        tostring(numerals[influenceLead]), self.x, self.y + TILE_H*0.3, TILE_W, "center")
+        tostring(numerals[influenceLead]), self.x, self.y + TILE_H*0.1, TILE_W, "center")
     end
     useful.bindWhite()
   end
@@ -285,7 +285,7 @@ function state:mousepressed(x, y)
           end)
           if isCombo then
             comboList[comboStartTile] = true
-            owner.score = owner.score + comboSize*comboSize
+            owner.score = owner.score + comboSize*comboSize*comboSize
           end
         end
       end
