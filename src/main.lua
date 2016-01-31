@@ -114,6 +114,11 @@ function love.load(arg)
   gamestate.switch(title)
 end
 
+function love.resize(w, h)
+  -- set scaling based on resolution
+  scaling.reset(w, h)
+end
+
 function love.focus(f)
   gamestate.focus(f)
 end

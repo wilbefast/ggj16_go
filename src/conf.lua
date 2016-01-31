@@ -8,8 +8,10 @@ function love.conf(t)
   t.window.icon = nil                -- Filepath to an image to use as the window's icon (string)
   t.window.width = 400
   t.window.height = 500
+  t.window.minwidth = 384
+  t.window.minheight = 448
   t.window.borderless = false        -- Remove all border visuals from the window (boolean)
-  t.window.resizable = false         -- Let the window be user-resizable (boolean)
+  t.window.resizable = true         -- Let the window be user-resizable (boolean)
   t.window.fullscreen = false        -- Enable fullscreen (boolean)
   t.window.fullscreentype = "exclusive" -- Standard fullscreen or desktop fullscreen mode (string)
   t.window.vsync = true              -- Enable vertical sync (boolean)

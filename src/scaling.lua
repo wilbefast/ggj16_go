@@ -15,10 +15,10 @@ WORLD_DIAMETER = math.sqrt(WORLD_DIAMETER2)
 DESKTOP_W = nil
 DESKTOP_H = nil
 
-local _reset = function()
+local _reset = function(w, h)
   -- set resolution
-  WINDOW_W = love.graphics.getWidth()
-  WINDOW_H = love.graphics.getHeight()
+  WINDOW_W = w or love.graphics.getWidth()
+  WINDOW_H = h or love.graphics.getHeight()
   if not DESKTOP_W or not DESKTOP_H then
   	DESKTOP_W = WINDOW_W
 		DESKTOP_H = WINDOW_H

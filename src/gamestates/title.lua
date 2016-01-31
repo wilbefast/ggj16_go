@@ -58,6 +58,11 @@ end
 
 function state:draw()
 
+	-- logo
+
+	
+	love.graphics.setColor(255, 204, 127)
+
 	-- text
 	love.graphics.setFont(fontLarge)
 	love.graphics.printf("RYTE", WORLD_W*0.1, WORLD_H*0.1, WORLD_W*0.8, "center")
@@ -65,13 +70,13 @@ function state:draw()
 	love.graphics.printf("@wilbefast", WORLD_W*0.1, WORLD_H*0.75, WORLD_W*0.8, "center")
 	love.graphics.printf("#GGJ16", WORLD_W*0.1, WORLD_H*0.85, WORLD_W*0.8, "center")
 
-	-- logo
-
   -- cursor
   local x, y = love.mouse.getPosition( )
   x = (x - (WINDOW_W - VIEW_W)*0.5)/WINDOW_SCALE
   y = (y - (WINDOW_H - VIEW_H)*0.5)/WINDOW_SCALE
   love.graphics.draw(cursor, x, y)
+
+  useful.bindWhite()
 
 end
 
