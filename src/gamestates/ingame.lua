@@ -61,6 +61,7 @@ local Tile = Class
 
   init = function(self)
     self.influence = {}
+    self.size = 1
   end,
 }
 
@@ -69,6 +70,7 @@ Game loop
 --]]--
 
 function Tile:update(dt)
+  self.size = math.min(1, self.size + 4*dt)
 end
 
 function Tile:draw_outline()
@@ -82,7 +84,7 @@ function Tile:draw()
   -- colour based on the owner
   if self.owner then
     self.owner:bindColour()
-    love.graphics.draw(pentagram, self.x, self.y)
+    love.graphics.draw(pentagram, self.x + TILE_W*0.5, self.y + TILE_H*0.5, 0, self.size, self.size, 16, 16)
     useful.bindWhite()
   else
     for i, player in ipairs(Player) do
@@ -253,6 +255,9 @@ function state:mousepressed(x, y)
     -- set the owner
     tile.owner = owner
 
+    -- animation
+    tile.size = 0
+
     -- give the owner 1 point
     owner.score = owner.score + 1
 
@@ -324,6 +329,10 @@ function state:gamepadpressed(joystick, button)
 end
 
 function state:update(dt)
+  -- grid
+  grid:map(function(tile)
+    tile:update(dt)
+  end)
 end
 
 function state:draw()
