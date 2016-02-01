@@ -5,7 +5,7 @@ A Macbeth-themed variant of Go made to celebrate recent advances of artificial i
 
 GGJ diversifiers
 * One hand tied behind my back
-* Gandhi’s Game
+* LEGO got it right
 * No retreat, no surrender
 * The Bard's Tale
 
